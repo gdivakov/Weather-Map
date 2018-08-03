@@ -1,0 +1,104 @@
+.add {
+	margin-top: 20px;
+}
+
+#main {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.temp {
+	font-size: 50px;
+	vertical-align: 'top';
+}
+
+.celsius {
+	font-size: 16px;
+	vertical-align: top;
+	line-height: 0;
+}
+
+.temp {
+	font-size: 50px;
+	vertical-align: top;
+}
+
+.weather-icon {
+	width: 64px;
+	height: 64px;
+	margin-top: -18px;
+}
+
+#weather-desc {
+	font-size: 20px;
+	margin-bottom: 22px;
+	color: #878787;
+}
+
+.sun-img {
+	width: 50px;
+	height: 50px;
+}
+
+.sun-time {
+	display: block;
+	font-size: 20px
+}
+
+/* tablets */
+
+@media screen and (max-width: 1080px) {
+
+}
+
+@media screen and (max-width: 780px) {
+	.temp {
+		font-size: 30px;
+		vertical-align: top;
+	}
+	.celsius {
+		font-size: 14px;
+		vertical-align: top;
+		line-height: 0;
+	}
+	.sun-img {
+		width: 30px;
+		height: 30px;
+	}
+	.sun-time {
+		display: block;
+		font-size: 16px
+	}
+	.weather-icon {
+		width: 40px;
+		height: 40px;
+		margin-top: -10px;
+	}
+	#weather-desc {
+		font-size: 17px;
+		margin-bottom: 15px;
+		color: #878787;
+	}
+	.other {
+		color: darkslategrey;
+		margin: 0;
+		vertical-align: top;
+		font-size: 17px;
+	}
+	
+}
+
+@media screen and (max-width: 600px) {
+
+}
+
+/* mobiles */
+
+@media screen and (max-width: 480px) {
+	.sun-img {
+		width: 20px;
+		height: 20px;
+	}
+}
