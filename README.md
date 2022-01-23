@@ -1,4 +1,4 @@
 # Weather Map
 - simple &amp; fast React/Redux application to fetch weather anywhere
 # Look at the stuff in action:
-http://meek-title.surge.sh
+http://violent-jelly.surge.sh
