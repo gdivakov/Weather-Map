@@ -1,73 +1,20 @@
 import L from 'leaflet';
 
-const mapboxUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+const LEAFLET_URL = "https://api.mapbox.com/styles/v1/";
+const mapboxUrl = `${LEAFLET_URL}{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`;
 const attribution = '';
-const accessToken = 'pk.eyJ1IjoiamFja3NtZWV0IiwiYSI6ImNqamw4azNzYzFhbzEzdm0wZjZ2MWw4OGsifQ.asLd4d0r0Id6VlYIwth4Pg';
+const { REACT_APP_LEAFLET_TOKEN: accessToken } = process.env;
 
-const Light = L.tileLayer(mapboxUrl, {
-	tileSize: 512,
-	maxZoom: 18,
-	zoomOffset: -1,
-	id: 'mapbox/light-v10',
-	accessToken,
-	attribution,
-});
-const Streets = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/streets-v11',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
+const layers = [
+	'mapbox/light-v10',
+	'mapbox/dark-v10',
+	'mapbox/satellite-v9',
+	'mapbox/satellite-streets-v11',
+	'mapbox/navigation-day-v1',
+	'mapbox/outdoors-v11',
+	'mapbox/navigation-night-v1',	
+];
 
-const Dark = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/dark-v10',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
+const initializedLayers = layers.map(id => L.tileLayer(mapboxUrl, { id, accessToken, attribution }));
 
-const Satellite = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/satellite-v9',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
-
-const StreetsSatellite = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/satellite-streets-v11',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
-
-const NavigationDay = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/navigation-day-v1',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
-
-const Outdoors = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/outdoors-v11',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
-
-const NavigationNight = L.tileLayer(mapboxUrl, {
-	id: 'mapbox/navigation-night-v1',
-	attribution,
-	maxZoom: 18,
-	accessToken
-});
-
-export default {
-	Light,
-	Streets,
-	Dark,
-	Satellite,
-	StreetsSatellite,
-	NavigationDay,
-	NavigationNight,
-	Outdoors,
-};
+export default initializedLayers;

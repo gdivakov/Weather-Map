@@ -1,8 +1,9 @@
+import L from 'leaflet'
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import L from 'leaflet'
+
 import ukraineGeoJSON from '../data/ukraine'
-import layers from '../data/layers'
+import preparedLayers, { layers } from '../utils/layers'
 import {fetchRegionById, onMapClick} from '../actions/async'
 import {
 	selectRegion,
@@ -23,6 +24,7 @@ import {
 	findExtrems,
 	getGrades,
 } from '../utils/mapUtils'
+
 import '../css/map.css'
 
 class MapApp extends Component {
@@ -35,7 +37,10 @@ class MapApp extends Component {
 		const {showMessage, withTooltip, tooltip, duration} = this.props;
 		
 		this.initialize();
-		if (withTooltip) showMessage(tooltip, duration);
+
+		if (withTooltip) {
+			showMessage(tooltip, duration);
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -54,7 +59,9 @@ class MapApp extends Component {
 			toggleLayersDisplay
 		} = nextProps;
 
-		if (event === 'update_weather') this.weather = weather;
+		if (event === 'update_weather') {
+			this.weather = weather;
+		}
 
 		// fit by coords
 		if (fitTo) {
@@ -96,19 +103,12 @@ class MapApp extends Component {
 	}
 
 	initialize() {
-		// Define base map layers
-		const baseMaps = {}
-
-		for (let key in layers) {
-			baseMaps[key] = layers[key];
-		}
-
 		// create map
 		this.map = L.map('map', {
 				center: [48.78, 32.35],
 				zoom: 6,
 				minZoom: 1,
-				layers: [baseMaps['Light']]
+				layers: [preparedLayers[layers[0].label]]
 			})
 
 		// create info L.control and define it's methods
@@ -131,7 +131,7 @@ class MapApp extends Component {
 		this.info.addTo(this.map);	
 
 		// add control 
-		L.control.layers(baseMaps, {}, {position: 'bottomleft'}).addTo(this.map);
+		L.control.layers(preparedLayers, {}, {position: 'bottomleft'}).addTo(this.map);
 
 		// define handlers
 		this.map.on('locationfound', (e) => onLocationFound(e, this.map));
