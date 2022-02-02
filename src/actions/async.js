@@ -1,18 +1,23 @@
 import ukraineGeoJSON from '../data/ukraine'
 import {showMessage} from './index'
-const APPID = '80d0a16bd55a21fc883c5278f7f8bb1f'
 
+const { REACT_APP_OPEN_WEATHER_MAP_ID: APPID } = process.env;
+console.log(process.env);
+const OPEN_WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather";;
 const fetchRegionById = (dispatch, id) => {
+	
 
 	dispatch({type: "FETCH_BY_ID_START"});
-	fetch(`http://api.openweathermap.org/data/2.5/weather?id=${id}&APPID=${APPID}`).then(res => {
-		if (res.status !== 200) throw new Error("Fetch region by id error");
+	fetch(`${OPEN_WEATHER_URL}?id=${id}&APPID=${APPID}`)
+	.then(res => {
+		if (res.status !== 200) {
+			throw new Error("Fetch region by id error");			
+		}
+
 		return res.json();
-	}).then((json) => {
-		return dispatch({type: 'FETCH_BY_ID_SUCCESS', value: json, id});
 	})
+	.then((json) => dispatch({type: 'FETCH_BY_ID_SUCCESS', value: json, id}))
 	.catch(err => {
-		
 		showMessage(dispatch, err.message)
 		return dispatch({type: 'FETCH_BY_ID_ERROR', value: err.message});
 	});
@@ -20,9 +25,13 @@ const fetchRegionById = (dispatch, id) => {
 }
 
 const getCountryWeather = (existingWeather = {}, type, dispatch, isFindByPointOn = false, layersExist = true) => {
+	if (isFindByPointOn) {
+		return showMessage(dispatch, 'Turn off "By point" option before display levels');		
+	}
 
-	if (isFindByPointOn) return showMessage(dispatch, 'Turn off "By point" option before display levels');
-	if (!layersExist) dispatch({type: "TOGGLE_LAYERS_DISPLAY"});
+	if (!layersExist) {
+		dispatch({type: "TOGGLE_LAYERS_DISPLAY"});		
+	}
 
 	// filter currently existing data
 	const regions = ukraineGeoJSON.features.filter(feature => {
@@ -50,7 +59,7 @@ const getCountryWeather = (existingWeather = {}, type, dispatch, isFindByPointOn
 	
 	for (let i = 0; i < regions.length; i++) {
 		tasks.push(new Promise((res, rej) => {
-			fetch(`http://api.openweathermap.org/data/2.5/weather?id=${regions[i].properties.id}&APPID=${APPID}`)
+			fetch(`${OPEN_WEATHER_URL}?id=${regions[i].properties.id}&APPID=${APPID}`)
 				.then(res => {
 					if (res.status !== 200) throw new Error("Fetch all regions error");
 					return res.json();
@@ -106,7 +115,7 @@ const searchByCity = (dispatch, value) => {
 	dispatch({type: 'CLOSE_MENU'});
 	dispatch({type: 'FETCH_BY_CITY_NAME_START'});
 
-	fetch(`http://api.openweathermap.org/data/2.5/weather?q=${value.trim()}&APPID=${APPID}`)
+	fetch(`${OPEN_WEATHER_URL}?q=${value.trim()}&APPID=${APPID}`)
 		.then(res => {
 			if (res.status !== 200) {
 				throw new Error("Not found");
@@ -135,7 +144,7 @@ const searchByCoords = (dispatch, value) => {
 	dispatch({type: "CLOSE_MENU"});
 	dispatch({type: "FETCH_BY_COORDS_START"});
 
-	fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&APPID=${APPID}`)
+	fetch(`${OPEN_WEATHER_URL}?lat=${coords[0]}&lon=${coords[1]}&APPID=${APPID}`)
 		.then(res => {
 			if (res.status !== 200) {
 				throw new Error("Not Found");
@@ -153,8 +162,11 @@ const searchByCoords = (dispatch, value) => {
 		});
 }
 
-const onMapClick = (dispatch, e) => {
-	searchByCoords(dispatch, `${e.latlng.lat} ${e.latlng.lng}`);
-}
+const onMapClick = (dispatch, e) => searchByCoords(dispatch, `${e.latlng.lat} ${e.latlng.lng}`);
 
-export { fetchRegionById, getCountryWeather, searchByType, onMapClick };
+export { 
+	fetchRegionById, 
+	getCountryWeather, 
+	searchByType, 
+	onMapClick 
+};
