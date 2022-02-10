@@ -27,6 +27,7 @@ import {
 
 import '../css/map.css'
 
+// Map interaction logic (legacy code)
 class MapApp extends Component {
 
 	shouldComponentUpdate() {
@@ -76,7 +77,9 @@ class MapApp extends Component {
 			});
 
 			resetFit();
-			if (findByPoint) findByPointOff();
+			if (findByPoint) {
+				findByPointOff();				
+			}
 		}
 
 		if (findByPoint) {
