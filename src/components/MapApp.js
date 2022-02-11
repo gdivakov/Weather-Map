@@ -27,6 +27,12 @@ import {
 
 import '../css/map.css'
 
+const GRADES_COUNT = 8;
+const INTERACTIVE_LAYERS_TYPES = {
+	HUMIDITY: 'humidity',
+	TEMPERATURE: 'temp',
+}
+
 // Map interaction logic (legacy code)
 class MapApp extends Component {
 
@@ -36,7 +42,7 @@ class MapApp extends Component {
 
 	componentDidMount() {
 		const {showMessage, withTooltip, tooltip, duration} = this.props;
-		
+
 		this.initialize();
 
 		if (withTooltip) {
@@ -53,10 +59,10 @@ class MapApp extends Component {
 			findByPoint,
 			event,
 			weather,
-			showHumidityLevel,
-			showTempLevel,
+			showHumidityLevel: isHumidityLevelDisplayed,
+			showTempLevel: isTempLevelDisplayed,
 			onMapClick,
-			layersDisplay,
+			layersDisplay: isLayersDisplayed,
 			toggleLayersDisplay
 		} = nextProps;
 
@@ -69,7 +75,7 @@ class MapApp extends Component {
 			// set layers view to default
 			this.selectedLayer = null
 			this.highlightRegions();
-			
+
 			// show region by coords
 			this.map.flyTo(L.latLng(fitTo.lat, fitTo.lon), 10, {
 				animate: true,
@@ -78,13 +84,13 @@ class MapApp extends Component {
 
 			resetFit();
 			if (findByPoint) {
-				findByPointOff();				
+				findByPointOff();
 			}
 		}
 
 		if (findByPoint) {
 			// layers display => off
-			if (layersDisplay) toggleLayersDisplay();
+			if (isLayersDisplayed) toggleLayersDisplay();
 			this.removeLayers();
 
 			// change cursor view to crosshair
@@ -96,10 +102,16 @@ class MapApp extends Component {
 			this.map.off('click', onMapClick);
 		}
 
-		if (layersDisplay) {
-			if (showHumidityLevel) return this.showHumidityLevel();
-			if (showTempLevel) return this.showTempLevel()
-			return this.highlightRegions();			
+		if (isLayersDisplayed) {
+			if (isHumidityLevelDisplayed) {
+				return this.showLevels(INTERACTIVE_LAYERS_TYPES.HUMIDITY);
+			}
+
+			if (isTempLevelDisplayed) {
+				return this.showLevels(INTERACTIVE_LAYERS_TYPES.TEMPERATURE)
+			}
+
+			return this.highlightRegions();
 		} else {
 			this.removeLayers();
 		}
@@ -131,14 +143,14 @@ class MapApp extends Component {
 				: 'Hover over the area');
 		};
 
-		this.info.addTo(this.map);	
+		this.info.addTo(this.map);
 
-		// add control 
+		// add control
 		L.control.layers(preparedLayers, {}, {position: 'bottomleft'}).addTo(this.map);
 
 		// define handlers
 		this.map.on('locationfound', (e) => onLocationFound(e, this.map));
-		this.map.on('locationerror', onLocationError);	
+		this.map.on('locationerror', onLocationError);
 
 		this.highlightRegions();
 
@@ -155,7 +167,7 @@ class MapApp extends Component {
 		this.countryLayer = L.geoJson(ukraineGeoJSON, {style, onEachFeature}).addTo(map);
 
 		if (this.selectedLayer) {
-			// define region which had been selected before and remove it
+			// define region which was selected before and remove it
 			this.selectedLayer = this.findLayerByRegionId(this.selectedLayer, this.countryLayer._layers);
 			this.countryLayer.removeLayer(this.selectedLayer);
 		}
@@ -169,11 +181,10 @@ class MapApp extends Component {
 		for (let key in newLayers) {
 			if (newLayers[key].feature.properties.id === searchedId) return newLayers[key];
 		}
-		
+
 	}
 
-	showHumidityLevel() {
-		
+	showLevels(type) {
 		const {onEachFeature, map} = this;
 		const {weather} = this.props;
 
@@ -182,84 +193,33 @@ class MapApp extends Component {
 
 		// set weather data to geo json
 		const ukraineGeo = setWeatherData(ukraineGeoJSON.features, weather.get('regions'));
-
-		const extrems = findExtrems(ukraineGeo, 'humidity');
+		const extrems = findExtrems(ukraineGeo, type);
+		const getLayerStyle = type === INTERACTIVE_LAYERS_TYPES.HUMIDITY ? showRainActivity : showTempActivity;
+		const getLegendColor = type === INTERACTIVE_LAYERS_TYPES.HUMIDITY ? getColorHumidity : getColorTemp;
+		const units = type === INTERACTIVE_LAYERS_TYPES.HUMIDITY ? '%' : '°C';
 
 		this.countryLayer = L.geoJson(ukraineGeo, {
-			style: (feature) => showRainActivity(feature, extrems), 
+			style: (feature) => getLayerStyle(feature, extrems),
 			onEachFeature
 		}).addTo(map);
 
-		if (this.selectedLayer) {
-			// define region which had been selected at the previous view
-			this.selectedLayer = this.findLayerByRegionId(this.selectedLayer, this.countryLayer._layers);
-		}
-
 		// create legend
 		this.legend = L.control({position: 'topleft'});
-
-		this.legend.onAdd = function (map) {
-
+		this.legend.onAdd = function(map) {
 			const div = L.DomUtil.create('div', 'info legend'),
-				grades = getGrades(extrems, 8);
+				grades = getGrades(extrems, GRADES_COUNT);
 
-			// loop through our temps intervals and generate a label with a colored square for each interval
+			// loop through our temp intervals and generate label with a colored square for each interval
 			for (let i = grades.length-1; i > 0; i--) {
 				div.innerHTML +=
-					'<i style="background:' + getColorHumidity(grades[i], extrems) + '"></i> ' +
-					Math.round(grades[i-1]) + '%&ndash;' + Math.round(grades[i]) + '%<br>';
-			}		
-
-			return div;
-		};
-
-		this.legend.addTo(map);		
-
-		this.levelDisplay = true;
-	}
-
-	showTempLevel() {
-		const {onEachFeature, map} = this;
-		const {weather} = this.props;
-
-		this.countryLayer && this.countryLayer.remove(map);
-		this.legend && this.legend.remove(map);
-
-		// set weather data to geo json
-		const ukraineGeo = setWeatherData(ukraineGeoJSON.features, weather.get('regions'));
-
-		const extrems = findExtrems(ukraineGeo, 'temp');
-
-		this.countryLayer = L.geoJson(ukraineGeo, {
-			style: (feature) => showTempActivity(feature, extrems), 
-			onEachFeature
-		}).addTo(map);
-
-		if (this.selectedLayer) {
-			// defines region which had been selected before
-			this.selectedLayer = this.findLayerByRegionId(this.selectedLayer, this.countryLayer._layers);
-		}
-
-		// create legend
-		this.legend = L.control({position: 'topleft'});
-
-		this.legend.onAdd = function (map) {
-
-			const div = L.DomUtil.create('div', 'info legend'),
-				grades = getGrades(extrems, 8);
-
-			// loop through our temps intervals and generate a label with a colored square for each interval
-			for (let i = grades.length-1; i > 0; i--) {
-				div.innerHTML +=
-					'<i style="background:' + getColorTemp(grades[i], extrems) + '"></i> ' +
-					Math.round(grades[i - 1]) + '&ndash;' + Math.round(grades[i]) + ' °C<br>';
+					'<i style="background:' + getLegendColor(grades[i], extrems) + '"></i> ' +
+					Math.round(grades[i - 1]) + `${units}&ndash;` + Math.round(grades[i]) + `${units}<br>`;
 			}
 
 			return div;
 		};
 
-		this.legend.addTo(map);		
-
+		this.legend.addTo(map);
 		this.levelDisplay = true;
 	}
 
@@ -285,7 +245,7 @@ class MapApp extends Component {
 			dashArray: '',
 			fillOpacity: 0.7
 		});
-	
+
 		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
 			layer.bringToFront();
 		}
@@ -310,14 +270,14 @@ class MapApp extends Component {
 
 			// add previous selected layer
 			if (this.selectedLayer) this.countryLayer.addLayer(this.selectedLayer);
-				
+
 			// remove current selected layer
-			this.countryLayer.resetStyle(layer).removeLayer(layer);		
+			this.countryLayer.resetStyle(layer).removeLayer(layer);
 		}
 
 		// clicked? => save as current selected layer
 		this.selectedLayer = layer;
-		
+
 		this.map.fitBounds(layer.getBounds(), {
 			maxZoom: 7
 		});
