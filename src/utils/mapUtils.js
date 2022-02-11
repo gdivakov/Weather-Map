@@ -1,7 +1,9 @@
+const CELSIUS_IN_KELVINS = 273.15;
+
 // handler functions
 const onLocationFound = (e, map) => {
 }
-	
+
 const onLocationError = (e) => {
 	console.log(e.message);
 }
@@ -25,7 +27,7 @@ function getColorTemp(d, {min, max}) {
 	d > min+(max-min)*0.375   ? '#fd8d3c' :
 	d > min+(max-min)*0.250   ? '#feb24c' :
 	d > min+(max-min)*0.125   ? '#fed976' :
-			   '#ffeda0';		   
+			   '#ffeda0';
 }
 
 // default style (first open)
@@ -66,7 +68,7 @@ const setWeatherData = (features, regions) => {
 	for (let i = 0; i < features.length; i++) {
 		let region = regions.get(features[i].properties.id);
 
-		features[i].properties.temp = Math.round(region.getIn(['main', 'temp'])-273.15,-1);
+		features[i].properties.temp = Math.round(region.getIn(['main', 'temp']) - CELSIUS_IN_KELVINS, -1);
 		features[i].properties.humidity = Math.round(region.getIn(['main', 'humidity']), -1);
 	}
 	return features;
@@ -74,7 +76,7 @@ const setWeatherData = (features, regions) => {
 
 const findExtrems = (features, prop) => {
 	const extrems = {
-		min: features[0].properties[prop], 
+		min: features[0].properties[prop],
 		max: features[0].properties[prop]
 	};
 
