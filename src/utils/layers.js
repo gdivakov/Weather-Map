@@ -1,6 +1,7 @@
 import L from 'leaflet';
 
-const mapboxUrl = `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
+const mapboxUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+
 const attribution = '';
 const { REACT_APP_LEAFLET_TOKEN: accessToken } = process.env;
 
