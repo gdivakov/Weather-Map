@@ -1,5 +1,6 @@
 import ukraineGeoJSON from '../data/ukraine'
 import {showMessage} from './index'
+import BUTTON_CONSTS from '../constants/SidebarButtons.js'
 
 const { REACT_APP_OPEN_WEATHER_MAP_ID: APPID } = process.env;
 
@@ -44,9 +45,9 @@ const getCountryWeather = (existingWeather = {}, type, dispatch, isFindByPointOn
 	// if all data is on the store
 	if (!regions.length) {
 		switch (type) {
-			case 'Humidity level':
+			case BUTTON_CONSTS.HUMIDITY_LEVEL:
 				return dispatch({type: 'SHOW_WATER'});
-			case 'Temp level':
+			case BUTTON_CONSTS.TEMP_LEVEL:
 				return dispatch({type: 'SHOW_TEMP'});
 			default :
 				return dispatch({type: 'ERROR', message: 'unknown type'});
@@ -80,9 +81,9 @@ const getCountryWeather = (existingWeather = {}, type, dispatch, isFindByPointOn
 		})
 		.then(res => {
 			switch (type) {
-				case 'Humidity level':
+				case BUTTON_CONSTS.HUMIDITY_LEVEL:
 					return dispatch({type: 'SHOW_WATER'});
-				case 'Temp level':
+				case BUTTON_CONSTS.TEMP_LEVEL:
 					return dispatch({type: 'SHOW_TEMP'});
 				default :
 					return dispatch({type: 'ERROR', message: 'unknown type'});
@@ -96,9 +97,9 @@ const getCountryWeather = (existingWeather = {}, type, dispatch, isFindByPointOn
 
 const searchByType = (dispatch, type, value) => {
 	switch (type) {
-		case 'By city name':
+		case BUTTON_CONSTS.BY_CITY_NAME:
 			return searchByCity(dispatch, value);
-		case 'By coords':
+		case BUTTON_CONSTS.BY_COORDS:
 			return searchByCoords(dispatch, value);
 		default:
 			return dispatch({type: "ERROR"});

@@ -1,6 +1,7 @@
 import {fromJS} from 'immutable'
 import * as Actions from '../constants/ActionTypes.js'
 import {updateWeather} from '../utils/updateWeather'
+import BUTTON_CONSTS from '../constants/SidebarButtons.js'
 
 const initialState = fromJS({
 	showHumidityLevel: false,
@@ -12,11 +13,11 @@ const initialState = fromJS({
 	currentRegion: null,
 	fitTo: null,
 	findByPoint: false,
-	layersDisplay: true,	
+	layersDisplay: true,
 	weather: {
 		regions: {},
 		cities: {},
-		countries: {}, 
+		countries: {},
 	},
 	snackbar: {
 		message: null,
@@ -24,12 +25,12 @@ const initialState = fromJS({
 		autoHideDuration: null
 	},
 	dialogs: {
-		'By city name': {
+		[BUTTON_CONSTS.BY_CITY_NAME]: {
 			isOpen: false,
 			label: 'City name',
 			contentText: 'To find weather by City, please enter the name of your city here and click on the search button or press "Enter". (Use only English letters).'
 		},
-		'By coords': {
+		[BUTTON_CONSTS.BY_COORDS]: {
 			isOpen: false,
 			label: ' Lat Lon',
 			contentText: 'To find weather by coords, please enter the coords here and click on the search button or press "Enter".'
@@ -82,7 +83,7 @@ const main = (state = initialState, action) => {
 				.update('currentRegion', () => fromJS(action.value))
 				.update('isProgressing', () => initialState.get('isProgressing'))
 				.updateIn(['expanded', 'panel1'], val => true)
-				.update('event', () => 'update_weather');	
+				.update('event', () => 'update_weather');
 		case Actions.FETCH_BY_ID_ERROR:
 			return state
 				.update('isProgressing', () => initialState.get('isProgressing'))
@@ -99,7 +100,7 @@ const main = (state = initialState, action) => {
 			return state
 				.update('isProgressing', val => 'indeterminate')
 		case Actions.FETCH_ALL_REGIONS_WEATHER_SUCCESS:
-			return state 
+			return state
 				.update('isProgressing', val => initialState.get('isProgressing'))
 				.update('weather', val => updateWeather(state.get('weather'), action.res))
 				.update('event', val => 'update_weather')

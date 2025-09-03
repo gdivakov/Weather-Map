@@ -9,18 +9,19 @@ import SearchButton from './SearchButton'
 import PointButton from './PointButton'
 import ListItem from '@material-ui/core/ListItem';
 import LayersDisplayButton from './LayersDisplayButton'
+import BUTTON_CONSTS from '../constants/SidebarButtons.js'
 
 export const mailFolderListItems = (
   <div>
-		<SearchButton type='By city name'>
+		<SearchButton type={BUTTON_CONSTS.BY_CITY_NAME}>
 			<CityIcon />
 		</SearchButton>
 
-		<SearchButton type='By coords'>
+		<SearchButton type={BUTTON_CONSTS.BY_COORDS}>
 			<GpsFixedIcon />
 		</SearchButton>
 
-		<PointButton type="By point">
+		<PointButton type={BUTTON_CONSTS.BY_POINT}>
 			<AdjustIcon />
 		</PointButton>
 	</div>
@@ -28,11 +29,11 @@ export const mailFolderListItems = (
 
 export const otherMailFolderListItems = (
 	<div>
-		<LevelButton type='Temp level'>
+		<LevelButton type={BUTTON_CONSTS.TEMP_LEVEL}>
 			<WbSunnyIcon/>
 		</LevelButton>
 
-		<LevelButton type='Humidity level'>
+		<LevelButton type={BUTTON_CONSTS.HUMIDITY_LEVEL}>
 			<CloudIcon/>
 		</LevelButton>
 	</div>
@@ -41,7 +42,7 @@ export const otherMailFolderListItems = (
 export const buttonItems = (
 	<div>
 		<ListItem>
-			<LayersDisplayButton label="Display layers"/>
+			<LayersDisplayButton label={BUTTON_CONSTS.DISPLAY_LAYERS}/>
 		</ListItem>
 	</div>
 );
