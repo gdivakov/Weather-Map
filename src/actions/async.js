@@ -3,7 +3,7 @@ import {showMessage} from './index'
 
 const { REACT_APP_OPEN_WEATHER_MAP_ID: APPID } = process.env;
 
-const OPEN_WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather";
+const OPEN_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
 
 const fetchRegionById = (dispatch, id) => {
 	dispatch({type: "FETCH_BY_ID_START"});

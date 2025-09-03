@@ -33,9 +33,9 @@ class WeatherFragment extends React.Component {
 
 				<Typography>
 					<span>
-						<img 
-							className="weather-icon" 
-							src={getIconSrc(weather.getIn(['weather', 0, 'icon']))} 
+						<img
+							className="weather-icon"
+							src={getIconSrc(weather.getIn(['weather', 0, 'icon']))}
 							alt={weather.get('weather', 0, 'description')} />
 						<span className="temp">{temp}</span>
 						<span className="celsius" aria-label="°Celsius" aria-disabled="true" role="button">°C</span>
@@ -50,7 +50,7 @@ class WeatherFragment extends React.Component {
 				</Typography>
 
 				<Typography className={classes.sunBlock}>
-					<img className="sun-img" src="https://png.icons8.com/cotton/50/000000/sunset.png" alt="sunset" />
+					<img className="sun-img" src="https://cdn-icons-png.flaticon.com/512/3920/3920799.png" alt="sunset" />
 					<span className="sun-time">
 						{timeConverter(weather.getIn(['sys', 'sunset']))}
 					</span>
@@ -63,12 +63,12 @@ class WeatherFragment extends React.Component {
 						Wind:
 					</Typography>
 					<Typography className={classes.other}>
-						Speed: {windSpeed} 
+						Speed: {windSpeed}
 					</Typography>
 					<Typography className={classes.other}>
 						Direction: {windDegree}
-					</Typography>     
-				</Paper>  
+					</Typography>
+				</Paper>
 
 				<Paper square={false} elevation={2} className={classes.paper}>
 					<Typography className={classes.secHead}>
@@ -84,7 +84,7 @@ class WeatherFragment extends React.Component {
 						Cloudiness: {cloudiness}
 					</Typography>
 				</Paper>
-				
+
 			</div>
 		);
 	}
