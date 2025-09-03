@@ -41,7 +41,7 @@ export const otherMailFolderListItems = (
 export const buttonItems = (
 	<div>
 		<ListItem>
-			<LayersDisplayButton label={"Display layers"}/>
-		</ListItem>		
+			<LayersDisplayButton label="Display layers"/>
+		</ListItem>
 	</div>
 );

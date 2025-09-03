@@ -40,7 +40,7 @@ class BodyDrawer extends React.Component {
 				<Divider />
 				<List>{otherMailFolderListItems}</List>
 				<Divider />
-				<List>{buttonItems}</List>	
+				<List>{buttonItems}</List>
 			</div>
 		);
 
@@ -100,8 +100,8 @@ const styles = theme => {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.leavingScreen,
 			}),
-			background: '#1C3144',
-			color: 'wheat',
+			background: '#1f2937',
+			color: '#ffffff',
 		},
 		appBarShift: {
 			marginLeft: drawerWidth,
@@ -119,7 +119,7 @@ const styles = theme => {
 				easing: theme.transitions.easing.sharp,
 				duration: theme.transitions.duration.enteringScreen,
 			}),
-			background: 'wheat',
+			background: '#e5e7eb',
 		},
 		drawerPaperClose: {
 			overflowX: 'hidden',

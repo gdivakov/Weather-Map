@@ -33,11 +33,11 @@ class WeatherTab extends React.Component {
 
 const styles = theme => ({
 	panel: {
-		backgroundColor: 'wheat',
+		backgroundColor: '#e5e7eb',
 		textAlign: 'center'
 	},
 	panelDetails: {
-		backgroundColor: 'wheat',
+		backgroundColor: '#e5e7eb',
 		padding: '4px',
 		minWidth: 150
 	}

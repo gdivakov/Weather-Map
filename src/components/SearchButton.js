@@ -2,9 +2,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import SearchDialog from './SearchDialog'
 import {openDialog} from '../actions/index'
+import StyledListItemText from './StyledListItemText'
 
 class SearchButton extends React.Component {
 	render() {
@@ -15,9 +15,9 @@ class SearchButton extends React.Component {
 					<ListItemIcon>
 						{children}
 					</ListItemIcon>
-					<ListItemText primary={type} />
-				</ListItem>	
-				<SearchDialog type={type}/>					
+					<StyledListItemText primary={type} />
+				</ListItem>
+				<SearchDialog type={type}/>
 			</div>
 		);
 	}

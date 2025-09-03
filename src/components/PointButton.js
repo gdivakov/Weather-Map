@@ -1,7 +1,8 @@
 import React from 'react'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import StyledListItemText from './StyledListItemText'
+
 import {connect} from 'react-redux'
 import {toggleFindByPoint} from '../actions'
 
@@ -14,8 +15,8 @@ class PointButton extends React.Component {
 					<ListItemIcon>
 						{children}
 					</ListItemIcon>
-					<ListItemText primary={type} />
-				</ListItem>					
+					<StyledListItemText primary={type} />
+				</ListItem>
 			</div>
 		);
 	}

@@ -32,7 +32,7 @@ class LayersDisplayButton extends React.Component {
 
 const styles = theme => ({
 	label: {
-		fontSize: '1rem'
+		fontSize: '18px'
 	}
 });
 

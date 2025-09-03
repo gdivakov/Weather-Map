@@ -1,20 +1,21 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import StyledListItemText from './StyledListItemText'
+
 import { connect } from 'react-redux'
 import {getCountryWeather} from '../actions/async'
 
 class LevelButton extends React.Component {
 	render() {
 		const {children, onClick, weather, type, isFindByPointOn, layersExist} = this.props;
-		
+
 		return (
 			<ListItem button onClick={() => onClick(weather.get('regions'), type, isFindByPointOn, layersExist)}>
 				<ListItemIcon>
 					{children}
 				</ListItemIcon>
-				<ListItemText primary={type} />
+				<StyledListItemText primary={type} />
 			</ListItem>
 		);
 	}
